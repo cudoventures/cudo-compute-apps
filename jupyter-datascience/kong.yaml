@@ -19,4 +19,4 @@ consumers:
 #      - key: my-key
     basicauth_credentials:
       - username: kong
-        password: BASIC_AUTH_PASSWORD
+        password: password
