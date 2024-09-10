@@ -1,0 +1,33 @@
+_format_version: '3.0'
+_transform: true
+
+services:
+  - name: triton-http
+    url: http://triton:8000
+    routes:
+      - name: http
+        paths:
+          - /triton
+    plugins:
+      - name: key-auth
+  - name: triton-grpc
+    url: http://triton:8001
+    routes:
+      - name: grpc
+        paths:
+          - /triton-grpc
+    plugins:
+      - name: key-auth
+  - name: triton-metrics
+    url: http://triton:8002
+    routes:
+      - name: grpc
+        paths:
+          - /triton-metrics
+    plugins:
+      - name: key-auth
+
+consumers:
+  - username: kong-user
+    keyauth_credentials:
+      - key: my-key
