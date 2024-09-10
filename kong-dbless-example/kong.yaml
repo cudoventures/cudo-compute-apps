@@ -8,10 +8,14 @@ services:
       - name: http
         paths:
           - /
-        strip_path: true
-    plugins:
+#        headers:
+#          upgrade:
+#            - WebSocket
+#          connection:
+#            - Upgrade
+#    plugins:
 #      - name: key-auth
-      - name: basic-auth
+#      - name: basic-auth
 
 consumers:
   - username: kong-user
