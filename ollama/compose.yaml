@@ -1,0 +1,55 @@
+services:
+  ollama:
+    image: ollama/ollama
+    volumes:
+      - ./ollama:/root/.ollama
+    ports:
+      - 127.0.0.1:11434:11434
+    container_name: ollama
+    networks:
+      - kong-net  # Connect to the "kong-net" network
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [ gpu ]
+  kong-dbless:
+    image: kong:3.6.1  # Use the specified Kong image version
+    container_name: kong-dbless
+    depends_on:
+      - ollama
+      - kong-configurator
+    networks:
+      - kong-net  # Connect to the "kong-net" network
+    volumes:
+      - .:/kong/  # Mount the current directory into the container
+    environment:
+      - KONG_DATABASE=off  # Disable the database
+      - KONG_DECLARATIVE_CONFIG=/kong/new-kong.yaml  # Specify the declarative config file
+      #      - KONG_SSL=on  # Enable SSL
+      #      - KONG_SSL_CERT=/kong/kong.crt  # SSL certificate path
+      #      - KONG_SSL_CERT_KEY=/kong/kong.key  # SSL key path
+      - KONG_PROXY_ACCESS_LOG=/dev/stdout  # Log proxy access to stdout
+      - KONG_ADMIN_ACCESS_LOG=/dev/stdout  # Log admin access to stdout
+      - KONG_PROXY_ERROR_LOG=/dev/stderr  # Log proxy errors to stderr
+      - KONG_ADMIN_ERROR_LOG=/dev/stderr  # Log admin errors to stderr
+    ports:
+      - 8000:8000  # Map port 8000 for local access
+      - 8443:8443  # Map port 8443 for SSL
+
+  kong-configurator:
+    image: alpine:latest
+    container_name: kong-configurator
+    volumes:
+      - .:/kong/  # Mount the current directory into the container
+    command: /bin/sh -c "sed "s/\KEY_AUTH_KEY/${KEY_AUTH_KEY}/g" /kong/kong.yaml > /kong/new-kong.yaml"
+    networks:
+      - kong-net  # Connect to the "kong-net" network
+
+networks:
+   kong-net:  # Define the "kong-net" network
+     driver: bridge
+     name: kong-net  # Name the network
+
