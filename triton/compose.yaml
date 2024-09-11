@@ -8,9 +8,9 @@ services:
       - kong-net  # Connect to the "kong-net" network
 #    command: nvidia-smi
     ports:
-      - "127.0.0.1:8000:8000" # HTTP
-      - "127.0.0.1:8001:8001" # GRPC
-      - "127.0.0.1:8002:8002" # Metrics
+      - "8000:8000" # HTTP
+      - "8001:8001" # GRPC
+      - "8002:8002" # Metrics
     deploy:
       resources:
         reservations:
@@ -38,7 +38,7 @@ services:
       - KONG_PROXY_ERROR_LOG=/dev/stderr  # Log proxy errors to stderr
       - KONG_ADMIN_ERROR_LOG=/dev/stderr  # Log admin errors to stderr
     ports:
-      - 127.0.0.1:8000:8000  # Map port 8000 for local access
+      - 80:8000  # Map port 8000 for local access
       - 8443:8443  # Map port 8443 for SSL
 
   networks:
