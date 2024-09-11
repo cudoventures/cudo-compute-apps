@@ -41,6 +41,6 @@ services:
       - 80:8000  # Map port 8000 for local access
       - 8443:8443  # Map port 8443 for SSL
 
-  networks:
+networks:
     kong-net:  # Define the "kong-net" network
      driver: bridge
