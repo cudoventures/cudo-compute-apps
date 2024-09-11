@@ -21,7 +21,7 @@ services:
   - name: triton-metrics
     url: http://triton:8002
     routes:
-      - name: grpc
+      - name: metrics
         paths:
           - /triton-metrics
     plugins:
