@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  lorax:
+    image: ghcr.io/predibase/lorax:main
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    shm_size: 1g
+    ports:
+      - "8080:80"
+    volumes:
+      - ./data:/data
+    environment:
+      - MODEL_ID=$model
+      - HUGGING_FACE_HUB_TOKEN=$HUGGING_FACE_HUB_TOKEN

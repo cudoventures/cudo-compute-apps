@@ -1,6 +1,8 @@
 services:
   jupyter:
-    image: jupyter/minimal-notebook:latest
+    build:
+      context: .
+      dockerfile: ./docker/jupyter/Dockerfile
     volumes:
       - ./work:/home/jovyan/work
     ports:
@@ -9,11 +11,11 @@ services:
     environment:
       - PASSWORD=set_in_env  # Set the password for Jupyter notebook
     command: "start-notebook.sh --NotebookApp.token=${PASSWORD}"
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: all
-              capabilities: [ gpu ]
+#    deploy:
+#      resources:
+#        reservations:
+#          devices:
+#            - driver: nvidia
+#              count: all
+#              capabilities: [ gpu ]
 

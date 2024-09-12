@@ -7,17 +7,21 @@ services:
     routes:
       - name: http
         paths:
-          - /triton
+          - /triton-http
     plugins:
       - name: key-auth
   - name: triton-grpc
-    url: http://triton:8001
+    protocol: grpc
+    host: triton
+    port: 8001
     routes:
       - name: grpc
+        protocols:
+          - grpc
         paths:
           - /triton-grpc
-    plugins:
-      - name: key-auth
+#    plugins:
+#      - name: key-auth
   - name: triton-metrics
     url: http://triton:8002
     routes:
@@ -30,4 +34,4 @@ services:
 consumers:
   - username: kong-user
     keyauth_credentials:
-      - key: my-key
+      - key: KEY_AUTH_KEY

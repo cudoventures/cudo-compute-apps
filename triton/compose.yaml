@@ -6,7 +6,11 @@ services:
       - ./model_repository:/models
     networks:
       - kong-net  # Connect to the "kong-net" network
-#    command: nvidia-smi
+    command: [ "tritonserver", "--model-store=/models" ]
+    shm_size: 2g  # Set shared memory size to 2GB
+    ulimits:
+      memlock: -1  # Lock memory to unlimited
+      stack: 67108864  # Set stack size to 64MB
     ports:
       - "8000:8000" # HTTP
       - "8001:8001" # GRPC
@@ -17,30 +21,41 @@ services:
           devices:
             - driver: nvidia
               count: all
-              capabilities: [gpu]
+              capabilities: [ gpu ]
   kong-dbless:
-    image: kong:3.6.1  # Use the specified Kong image version
+    image: kong:latest  # Use the specified Kong image version
     container_name: kong-dbless
     depends_on:
       - triton
+      - kong-configurator
     networks:
       - kong-net  # Connect to the "kong-net" network
     volumes:
       - .:/kong/  # Mount the current directory into the container
     environment:
       - KONG_DATABASE=off  # Disable the database
-      - KONG_DECLARATIVE_CONFIG=/kong/kong.yaml  # Specify the declarative config file
-#      - KONG_SSL=on  # Enable SSL
-#      - KONG_SSL_CERT=/kong/kong.crt  # SSL certificate path
-#      - KONG_SSL_CERT_KEY=/kong/kong.key  # SSL key path
+      - KONG_DECLARATIVE_CONFIG=/kong/new-kong.yaml
       - KONG_PROXY_ACCESS_LOG=/dev/stdout  # Log proxy access to stdout
       - KONG_ADMIN_ACCESS_LOG=/dev/stdout  # Log admin access to stdout
       - KONG_PROXY_ERROR_LOG=/dev/stderr  # Log proxy errors to stderr
       - KONG_ADMIN_ERROR_LOG=/dev/stderr  # Log admin errors to stderr
+#      - KONG_PROXY_LISTEN="0.0.0.0:8000 reuseport backlog=16384, 0.0.0.0:8443 http2 ssl reuseport backlog=16384, 0.0.0.0:9080 http2 reuseport backlog=16384, 0.0.0.0:9081 ssl http2 reuseport backlog=16384"
     ports:
-      - 80:8000  # Map port 8000 for local access
-      - 8443:8443  # Map port 8443 for SSL
+      - 80:8000  # http
+      - 443:443  # https
+#      - 8002:8002
+      - 9080:9080 # grpc
+      - 9081:9081 # grpc ssl
+
+  kong-configurator:
+    image: alpine:latest
+    container_name: kong-configurator
+    volumes:
+      - .:/kong/  # Mount the current directory into the container
+    command: /bin/sh -c "sed "s/\KEY_AUTH_KEY/${KEY_AUTH_KEY}/g" /kong/kong.yaml > /kong/new-kong.yaml"
+    networks:
+      - kong-net  # Connect to the "kong-net" network
 
 networks:
-    kong-net:  # Define the "kong-net" network
-     driver: bridge
+  kong-net: # Define the "kong-net" network
+    driver: bridge
