@@ -13,18 +13,18 @@ curl -X POST http://kong:8001/consumers/kong-user/basic-auth \
   --data username=kong \
   --data password=env_password
 
-## UI
-curl -X POST http://kong:8001/services \
-      --data name=admin-ui \
-      --data host=kong \
-      --data port=8002 
-
-curl -X POST http://kong:8001/services/admin-ui/routes \
-      --data paths[]=/admin-ui \
-      --data name=admin-ui-route 
-
-curl -X POST http://kong:8001/routes/admin-ui-route/plugins \
-  --data name=basic-auth 
+### UI
+#curl -X POST http://kong:8001/services \
+#      --data name=admin-ui \
+#      --data host=kong \
+#      --data port=8002
+#
+#curl -X POST http://kong:8001/services/admin-ui/routes \
+#      --data paths[]=/admin-ui \
+#      --data name=admin-ui-route
+#
+#curl -X POST http://kong:8001/routes/admin-ui-route/plugins \
+#  --data name=basic-auth
 
 ## API
 curl -X POST http://kong:8001/services \

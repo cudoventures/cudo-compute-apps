@@ -83,7 +83,7 @@ services:
 
       - "127.0.0.1:8001:8001/tcp"
       - "8444:8444/tcp"
-      - "127.0.0.1:8002:8002/tcp"
+#      - "127.0.0.1:8002:8002/tcp"
     healthcheck:
       test: [ "CMD", "kong", "health" ]
       interval: 10s
@@ -138,10 +138,25 @@ services:
       - ./config:/opt/kong
     command: sh /opt/kong/kong_config.sh
     environment:
-      - BASIC_AUTH_PASSWORD=set_by_env_file
+      - PASSWORD=set_by_env_file
     networks:
       - kong-net  # Connect to the "kong-net" network
 
+  nginx:
+    image: nginx:alpine-perl
+    volumes:
+      - "./nginx:/etc/nginx"
+    environment:
+      - USERNAME=set_by_env_file
+      - PASSWORD=set_by_env_file
+    entrypoint: >
+      sh -c 'apk add --no-cache apache2-utils &&
+                   htpasswd -b -c /etc/nginx/.htpasswd $USERNAME $PASSWORD &&
+                   nginx -g "daemon off;"'
+    ports:
+      - 8080:8080
+    networks:
+      - kong-net
 secrets:
   kong_postgres_password:
     environment: PASSWORD
