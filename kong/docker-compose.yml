@@ -66,6 +66,7 @@ services:
       KONG_PROXY_ERROR_LOG: /dev/stderr
       KONG_PREFIX: ${KONG_PREFIX:-/var/run/kong}
       KONG_DECLARATIVE_CONFIG: "/opt/kong/kong.yaml"
+
     secrets:
       - kong_postgres_password
     networks:
@@ -82,7 +83,7 @@ services:
 
       - "127.0.0.1:8001:8001/tcp"
       - "8444:8444/tcp"
-      - "8002:8002/tcp"
+      - "127.0.0.1:8002:8002/tcp"
     healthcheck:
       test: [ "CMD", "kong", "health" ]
       interval: 10s
