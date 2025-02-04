@@ -33,8 +33,9 @@ case $option in
     ;;
   ollama)
     echo "Setting up Ollama environment..."
-    wget -O /compose.yaml ${REPO_URL}/ollama/compose.yaml
-    wget -O /nginx.conf ${REPO_URL}/ollama/nginx.conf
+    mkdir -p /cudo
+    wget -O /cudo/compose.yaml ${REPO_URL}/ollama/compose.yaml
+    wget -O /cudo/nginx.conf ${REPO_URL}/ollama/nginx.conf
     wget -O /etc/systemd/system/cudo.service ${REPO_URL}/cudo.service
     systemctl daemon-reload
     systemctl enable cudo.service

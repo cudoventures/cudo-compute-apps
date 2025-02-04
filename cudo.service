@@ -5,10 +5,10 @@ After=docker.service
 
 [Service]
 Type=simple
-WorkingDirectory=/
-ExecStart=/bin/bash -c "docker compose -f /compose.yaml -p cudo up"
-ExecStop=/bin/bash -c "docker compose -f /compose.yaml -p cudo down"
-ExecReload=/bin/bash -c "docker compose -f /compose.yaml -p cudo restart"
+WorkingDirectory=/cudo
+ExecStart=/bin/bash -c "docker compose up"
+ExecStop=/bin/bash -c "docker compose down"
+ExecReload=/bin/bash -c "docker compose restart"
 Restart=always
 TimeoutStopSec=15
 
