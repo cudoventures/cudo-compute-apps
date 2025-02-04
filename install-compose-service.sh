@@ -35,10 +35,10 @@ case $option in
     echo "Setting up Ollama environment..."
     wget -O /compose.yaml ${REPO_URL}/ollama/compose.yaml
     wget -O /nginx.conf ${REPO_URL}/ollama/nginx.conf
-    wget -O /etc/systemd/system/docker-compose.service ${REPO_URL}/docker-compose.service
+    wget -O /etc/systemd/system/cudo.service ${REPO_URL}/cudo.service
     systemctl daemon-reload
-    systemctl enable docker-compose.service
-    systemctl start docker-compose.service
+    systemctl enable cudo.service
+    systemctl start cudo.service
 
     ;;
   *)
