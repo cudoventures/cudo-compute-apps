@@ -9,8 +9,8 @@ fi
 
 #Load env variables from .env
 
-if [ -f .env ]; then
-  export $(grep -v '^#' .env | xargs)
+if [ -f /cudo/.env ]; then
+  export $(grep -v '^#' /cudo/.env | xargs)
 else
   echo "[!] .env file not found!"
   exit 1
