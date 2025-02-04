@@ -6,10 +6,11 @@ After=docker.service
 [Service]
 Type=simple
 WorkingDirectory=/
-ExecStart=/usr/bin/docker-compose -f /compose.yaml up -d
-ExecStop=/usr/bin/docker-compose -f /compose.yaml down
-ExecReload=/usr/bin/docker-compose -f /compose.yaml restart
+ExecStart=/bin/bash -c "docker compose -f /compose.yaml up"
+ExecStop=/bin/bash -c "docker compose -f /compose.yaml down"
+ExecReload=/bin/bash -c "docker compose -f /compose.yaml restart"
 Restart=always
+TimeoutStopSec=15
 
 [Install]
 WantedBy=multi-user.target
