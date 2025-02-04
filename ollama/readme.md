@@ -1,20 +1,41 @@
-Got to your <IP_ADDRESS>
+# Ollama LLM inference server
+You need the IP address of your VM and the token generated at deployment.
+
+Use curl from your local machine to pull a model. Model list is here: [Ollama library](https://ollama.com/library)
+The model needs to fit on your GPU memory and VM Disk.
+
+```shell
+curl --header "Authorization: Bearer YOUR_TOKEN" http://192.0.0.0:8080/api/pull -d '{"model": "tinyllama"}'
+```
+You can continue using curl or any other REST tool: [API docs](https://github.com/ollama/ollama/blob/main/docs/api.md)
 
 
-https://github.com/ollama/ollama/blob/main/docs/api.md
+# OpenAI
+> **Note:** OpenAI compatibility is experimental and is subject to major adjustments including breaking changes. For fully-featured access to the Ollama API, see the Ollama [Python library](https://github.com/ollama/ollama-python), [JavaScript library](https://github.com/ollama/ollama-js) and [REST API](https://github.com/ollama/ollama/blob/main/docs/api.md).
+>
 
-from this:
+Now the model is ready, you can use openai python library: 
 
-curl http://localhost:11434/api/tags
+```shell
+pip install openai
+```
 
-to this:
+```python
+ip  = "192.0.0.0"
+ 
 
-curl  --header "apikey: key_auth_key"  http://tron:8000/api/tags
+from openai import OpenAI
 
-TODO:
-see if I can write headers here:
-https://github.com/ollama/ollama-python
+client = OpenAI(
+    base_url='http://'+ ip +':8080/v1/',
+    api_key='YOUR_TOKEN',
+)
 
-https://github.com/ollama/ollama-js
+list_completion = client.models.list()
 
-also decide on which port to serve on 11434, 80 ?? or 8000
+
+print(list_completion.data)
+```
+See more here: [OpenAI docs](https://github.com/ollama/ollama/blob/main/docs/openai.md)
+
+Or you can use non-openai format 
