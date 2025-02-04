@@ -38,6 +38,7 @@ case $option in
     wget -O /etc/systemd/system/docker-compose.service ${REPO_URL}/docker-compose.service
     systemctl daemon-reload
     systemctl enable docker-compose.service
+    systemctl start docker-compose.service
 
     ;;
   *)
