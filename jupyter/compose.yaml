@@ -1,21 +1,20 @@
 services:
   jupyter:
-    build:
-      context: .
-      dockerfile: ./docker/jupyter/Dockerfile
+    image: jupyter/scipy-notebook:latest
     volumes:
-      - ./work:/home/jovyan/work
+      - /work:/home/jovyan/work
     ports:
       - 8888:8888
-    container_name: jupyter_notebook
+    container_name: jupyter
     environment:
-      - PASSWORD=set_in_env  # Set the password for Jupyter notebook
-    command: "start-notebook.sh --NotebookApp.token=${PASSWORD}"
-#    deploy:
-#      resources:
-#        reservations:
-#          devices:
-#            - driver: nvidia
-#              count: all
-#              capabilities: [ gpu ]
+      - AUTH_TOKEN=CUDO_TOKEN
+      - GEN_CERT=yes
+    command: "start-notebook.sh --NotebookApp.token=${AUTH_TOKEN}"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [ gpu ]
 

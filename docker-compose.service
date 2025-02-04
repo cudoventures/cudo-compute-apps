@@ -1,0 +1,15 @@
+[Unit]
+Description=Docker Compose Application Service
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=simple
+WorkingDirectory=/
+ExecStart=/usr/bin/docker-compose -f /compose.yaml up -d
+ExecStop=/usr/bin/docker-compose -f /compose.yaml down
+ExecReload=/usr/bin/docker-compose -f /compose.yaml restart
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
