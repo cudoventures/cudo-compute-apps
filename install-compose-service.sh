@@ -34,7 +34,7 @@ case $option in
   ollama)
     echo "Setting up Ollama environment..."
     wget -O /compose.yaml ${REPO_URL}/ollama/compose.yaml
-    wget -O /compose.yaml ${REPO_URL}/ollama/nginx.conf
+    wget -O /nginx.conf ${REPO_URL}/ollama/nginx.conf
     wget -O /etc/systemd/system/docker-compose.service ${REPO_URL}/docker-compose.service
     systemctl daemon-reload
     systemctl enable docker-compose.service
