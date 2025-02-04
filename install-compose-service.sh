@@ -7,6 +7,15 @@ if [ -z "$1" ]; then
   exit 1
 fi
 
+#Load env variables from .env
+
+if [ -f .env ]; then
+  export $(grep -v '^#' .env | xargs)
+else
+  echo "[!] .env file not found!"
+  exit 1
+fi
+
 # Argument passed to the script
 option=$1
 
@@ -36,6 +45,8 @@ case $option in
     mkdir -p /cudo
     wget -O /cudo/compose.yaml ${REPO_URL}/ollama/compose.yaml
     wget -O /cudo/nginx.conf ${REPO_URL}/ollama/nginx.conf
+    sed -i "s/CUDO_TOKEN/${AUTH_TOKEN}/g" /cudo/nginx.conf
+
     wget -O /etc/systemd/system/cudo.service ${REPO_URL}/cudo.service
     systemctl daemon-reload
     systemctl enable cudo.service
