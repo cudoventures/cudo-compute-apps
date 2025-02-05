@@ -1,4 +1,12 @@
 # Ollama LLM inference server
+
+This can be run in a startup script or via an SSH terminal:
+```shell
+mkdir -p /cudo
+echo AUTH_TOKEN=mytoken > /cudo/.env
+wget -qO - https://raw.githubusercontent.com/cudoventures/cudo-compute-apps/refs/heads/main/install-compose-service.sh | bash -s ollama
+```
+
 You need the IP address of your VM and the token generated at deployment.
 
 Use curl from your local machine to pull a model. Model list is here: [Ollama library](https://ollama.com/library)
