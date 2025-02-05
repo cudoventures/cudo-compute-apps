@@ -39,6 +39,13 @@ case $option in
     ;;
   vllm)
     echo "Setting up VLLM environment..."
+    mkdir -p /cudo
+    wget -O /cudo/compose.yaml ${REPO_URL}/vllm/compose.yaml
+
+    wget -O /etc/systemd/system/cudo.service ${REPO_URL}/cudo.service
+    systemctl daemon-reload
+    systemctl enable cudo.service
+    systemctl start cudo.service
     ;;
   ollama)
     echo "Setting up Ollama environment..."
@@ -51,7 +58,6 @@ case $option in
     systemctl daemon-reload
     systemctl enable cudo.service
     systemctl start cudo.service
-
     ;;
   *)
     echo "Invalid option. Usage: $0 {jupyter|jupyter-pytorch|jupyter-tensorflow|vllm|ollama}"
