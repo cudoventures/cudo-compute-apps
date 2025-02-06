@@ -1,13 +1,15 @@
 # Ollama LLM inference server
 You will need to:
-    - decide on an API key / token for your LLM sever
-    - choose a deepseek model version i.e. deepseek-r1:7b
-    - start a VM with a GPU large enough for the model
+
+- decide on an API key / token for your LLM sever
+- choose a deepseek model version i.e. deepseek-r1:7b
+- start a VM with a GPU large enough for the model
 
 ## Start a VM
 - Memory 16-32GB RAM is suitable for most single GPU setups, if using larger/multiple GPUs it is wise to set system memory to 0.5x or 1x total GPU VRAM
 - CPU 8-16 vCPUs is suitable for single GPU setups, but generally vCPU set to 0.5x Memory works well
-- A suitably large boot disk 100GB + your model size if significant and **Ubuntu 22.04 + NVIDIA drivers + Docker** OS image
+- A suitably large boot disk 100GB + your model size if significant
+- Choose **Ubuntu 22.04 + NVIDIA drivers + Docker** OS image
 
 ### Choosing a GPU
 
