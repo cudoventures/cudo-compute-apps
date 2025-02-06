@@ -3,7 +3,7 @@
 This can be run in a startup script or via an SSH terminal:
 ```shell
 mkdir -p /cudo
-echo HUGGING_FACE_HUB_TOKEN==hf_XXXXX > /cudo/.env
+echo HUGGING_FACE_HUB_TOKEN=hf_XXXXX > /cudo/.env
 echo VLLM_API_KEY=mytoken >> /cudo/.env 
 echo HUGGING_FACE_MODEL=mistralai/Mistral-7B-v0.1 >> /cudo/.env 
 wget -qO - https://raw.githubusercontent.com/cudoventures/cudo-compute-apps/refs/heads/main/install-compose-service.sh | bash -s vllm
@@ -26,24 +26,37 @@ pip install openai
 ```
 
 ```python
-ip  = "192.0.0.0"
- 
-
 from openai import OpenAI
+
 client = OpenAI(
-    base_url="http://"+ip+":8000/v1",
     api_key="YOUR_TOKEN",
+    base_url="http://194.0.0.0:8000/v1",
 )
 
-completion = client.chat.completions.create(
-  model="NousResearch/Meta-Llama-3-8B-Instruct",
-  messages=[
-    {"role": "user", "content": "Hello!"}
-  ]
-)
+models = client.models.list()
+print(f"Available models: {models.data}")
+model = models.data[0].id
 
-print(completion.choices[0].message)
+# Completion API
+stream = False
+completion = client.completions.create(
+    model=model,
+    prompt="A robot may not injure a human being",
+    echo=False,
+    n=2,
+    stream=stream,
+    logprobs=3)
+
+print("Completion results:")
+if stream:
+    for c in completion:
+        print(c)
+    for c in completion:
+        if c.choices:
+            print(c.choices[0].text)
+else:
+    print(completion)
+    for choice in completion.choices:
+        print(choice.text)
 ```
 See more here: [OpenAI docs](https://docs.vllm.ai/en/latest/serving/openai_compatible_server.html)
-
-Or you can use non-openai format 

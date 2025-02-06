@@ -10,7 +10,8 @@ services:
               count: all
               capabilities: [gpu]
     volumes:
-      - ~/.cache/huggingface:/root/.cache/huggingface
+      - /cudo/huggingface:/root/.cache/huggingface
+      -
     environment:
       - HUGGING_FACE_HUB_TOKEN
       - VLLM_API_KEY
