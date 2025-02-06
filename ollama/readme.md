@@ -1,9 +1,10 @@
 # Ollama LLM inference server
 
-This can be run in a startup script or via an SSH terminal:
+This can be run in a startup script or via an SSH terminal, be sure to change ``YOUR_TOKEN`` to your desired ``api_key``. 
+
 ```shell
 mkdir -p /cudo
-echo AUTH_TOKEN=mytoken > /cudo/.env
+echo AUTH_TOKEN=YOUR_TOKEN > /cudo/.env
 wget -qO - https://raw.githubusercontent.com/cudoventures/cudo-compute-apps/refs/heads/main/install-compose-service.sh | bash -s ollama
 ```
 

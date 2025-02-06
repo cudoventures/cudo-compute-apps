@@ -11,6 +11,8 @@ wget -qO - https://raw.githubusercontent.com/cudoventures/cudo-compute-apps/refs
 This will install the compose.yaml as a service and [triton-cli](https://github.com/triton-inference-server/triton_cli)
 
 ## Loading a model
+Models need to be saved ``/root/models``, you can download them yourself or scp them across, but an easy way to load a model is to use triton-cli.
+
 By default; the app is configured to poll the models directory for new models and load them into Triton. This can be configured differently below. To load a model you can either ssh on to the VM and download it manually or scp it across.
 However, triton cli is installed so to quickly get started you can load a hugging face model by logging on to the VM and running this:
 
@@ -21,6 +23,7 @@ triton import -m gpt2
 For gated models, you will need a Huggingface account and approval to use the model, then you will need to log on to the VM and log in to hugging face
 
 
+## Options
 By default the triton docker image is set to: nvcr.io/nvidia/tritonserver:25.01-py3 but you can change the type by editing the .env file in ``/cudo/.env``
 
 
@@ -35,8 +38,6 @@ You can also change the mode control mode, this is how Triton server knows when 
 
 
 
-
-Models need to be saved ``/root/models``, you can download them yourself or scp them across, but an easy way to load a model is to use triton-cli.
 
 
 
