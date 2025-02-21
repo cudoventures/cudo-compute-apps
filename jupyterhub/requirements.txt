@@ -17,7 +17,6 @@ openpyxl
 pandas
 patsy
 protobuf
-pytables
 scikit-image
 scikit-learn
 scipy
@@ -27,7 +26,3 @@ statsmodels
 sympy
 widgetsnbextension
 xlrd
-torch
-torchaudio
-torchvision
-tensorflow[and-cuda]
