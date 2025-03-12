@@ -1,3 +1,4 @@
+export DEBIAN_FRONTEND="noninteractive"
 apt-get update
 apt-get -y install python3 python3-dev git curl
 curl -L https://tljh.jupyter.org/bootstrap.py \
