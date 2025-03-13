@@ -23,7 +23,7 @@ option=$1
 case $option in
   jupyter)
     echo "Setting up Jupyter environment..."
-    mkdir /work
+    mkdir /cudo
     wget -P /compose.yaml ${REPO_URL}/ollama/compose.yaml
     wget -P /docker-compose.service ${REPO_URL}/docker-compose.service
     systemctl daemon-reload

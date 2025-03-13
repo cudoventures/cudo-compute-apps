@@ -2,7 +2,7 @@ services:
   jupyter:
     image: jupyter/scipy-notebook:latest
     volumes:
-      - /work:/home/jovyan/work
+      - /cudo:/home/jovyan/work
     ports:
       - 8888:8888
     container_name: jupyter
