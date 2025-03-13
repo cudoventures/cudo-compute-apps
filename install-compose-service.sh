@@ -13,7 +13,6 @@ if [ -f /cudo/.env ]; then
   export $(grep -v '^#' /cudo/.env | xargs)
 else
   echo "[!] .env file not found!"
-  exit 1
 fi
 
 # Argument passed to the script
