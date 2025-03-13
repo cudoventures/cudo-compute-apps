@@ -9,7 +9,7 @@ services:
     environment:
       - AUTH_TOKEN=CUDO_TOKEN
       - GEN_CERT=yes
-    command: "start-notebook.sh --NotebookApp.token=${AUTH_TOKEN}"
+    command: "start-notebook.sh --NotebookApp.token="
     deploy:
       resources:
         reservations:
