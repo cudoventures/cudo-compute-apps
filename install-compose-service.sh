@@ -24,10 +24,11 @@ case $option in
   jupyter)
     echo "Setting up Jupyter environment..."
     mkdir /cudo
-    wget -P /compose.yaml ${REPO_URL}/ollama/compose.yaml
-    wget -P /docker-compose.service ${REPO_URL}/docker-compose.service
+    wget -O /cudo/compose.yaml ${REPO_URL}/jupyter/compose.yaml
+    wget -O /etc/systemd/system/cudo.service ${REPO_URL}/cudo.service
     systemctl daemon-reload
-    systemctl enable docker-compose.service
+    systemctl enable cudo.service
+    systemctl start cudo.service
 
     # Add commands to set up Jupyter
     ;;
