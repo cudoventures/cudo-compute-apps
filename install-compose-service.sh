@@ -73,6 +73,7 @@ case $option in
     echo "Installing OpenManus..."
     chmod +x /cudo/openmanus.sh
     /cudo/openmanus.sh
+    touch ~/openmanus-is-ready
     ;;
   triton)
     echo "Setting up Triton environment..."
