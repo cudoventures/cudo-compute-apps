@@ -59,6 +59,18 @@ case $option in
     systemctl enable cudo.service
     systemctl start cudo.service
     ;;
+  openmanus)
+    echo "Setting up OpenManus environment..."
+    mkdir -p /cudo
+    wget -O /cudo/compose.yaml ${REPO_URL}/openmanus/compose.yaml
+    wget -O /cudo/poll_and_pull.sh ${REPO_URL}/openmanus/poll_and_pull.sh
+    wget -O /cudo/openmanus.sh ${REPO_URL}/openmanus/openmanus.sh
+    wget -O /etc/systemd/system/cudo.service ${REPO_URL}/cudo.service
+    systemctl daemon-reload
+    systemctl enable cudo.service
+    systemctl start cudo.service
+    /cudo/openmanus.sh
+    ;;
   triton)
     echo "Setting up Triton environment..."
     mkdir -p /cudo
