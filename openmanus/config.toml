@@ -1,0 +1,13 @@
+# Global LLM configuration
+[llm]
+model = "qwq"
+base_url = "http://localhost:11434/v1"
+api_key = "ollama"
+max_tokens = 4096
+temperature = 0.0
+
+# Optional configuration for specific LLM models
+[llm.vision]
+model = "minicpm-v"
+base_url = "http://localhost:11434/v1"
+api_key = "ollama"

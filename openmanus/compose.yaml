@@ -1,0 +1,22 @@
+services:
+  ollama:
+    image: ollama/ollama
+    volumes:
+      - ./ollama:/root/.ollama
+    ports:
+      - 127.0.0.1:11434:11434
+    container_name: ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [ gpu ]
+  curl-service:
+    image: curlimages/curl
+    depends_on:
+      - ollama
+    entrypoint: [ "/bin/sh", "-c", "/scripts/poll_and_pull.sh" ]
+    volumes:
+      - .:/scripts
