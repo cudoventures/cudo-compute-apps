@@ -69,6 +69,7 @@ case $option in
     systemctl daemon-reload
     systemctl enable cudo.service
     systemctl start cudo.service
+    echo "Installing OpenManus..."
     /cudo/openmanus.sh
     ;;
   triton)
