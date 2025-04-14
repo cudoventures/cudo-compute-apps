@@ -3,7 +3,7 @@ REPO_URL=https://raw.githubusercontent.com/cudoventures/cudo-compute-apps/refs/h
 
 # Check if an argument is provided
 if [ -z "$1" ]; then
-  echo "Usage: $0 {jupyter|jupyter-pytorch|jupyter-tensorflow|vllm|ollama|triron}"
+  echo "Usage: $0 {jupyter|jupyter-pytorch|jupyter-tensorflow|vllm|ollama|triton}"
   exit 1
 fi
 
@@ -83,6 +83,19 @@ case $option in
     sed -i "s/CUDO_TOKEN/${AUTH_TOKEN}/g" /cudo/nginx.conf
     pip install git+https://github.com/triton-inference-server/triton_cli.git
 
+    wget -O /etc/systemd/system/cudo.service ${REPO_URL}/cudo.service
+    systemctl daemon-reload
+    systemctl enable cudo.service
+    systemctl start cudo.service
+    ;;
+  dify)
+    echo "Setting up DIFY environment..."
+    wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq
+    chmod +x /usr/bin/yq
+    mkdir -p /cudo
+    wget -O /cudo/docker.tar ${REPO_URL}/dify/docker.tar
+    cd cudo
+    tar -xf docker.tar --strip-components=1 -C .
     wget -O /etc/systemd/system/cudo.service ${REPO_URL}/cudo.service
     systemctl daemon-reload
     systemctl enable cudo.service
