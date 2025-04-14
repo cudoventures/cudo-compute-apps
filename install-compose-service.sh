@@ -94,7 +94,7 @@ case $option in
     chmod +x /usr/bin/yq
     mkdir -p /cudo
     wget -O /cudo/docker.tar ${REPO_URL}/dify/docker.tar
-    cd cudo
+    cd /cudo
     tar -xf docker.tar --strip-components=1 -C .
     wget -O /etc/systemd/system/cudo.service ${REPO_URL}/cudo.service
     systemctl daemon-reload
