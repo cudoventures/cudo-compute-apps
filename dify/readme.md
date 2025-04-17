@@ -27,3 +27,17 @@ Only use the command below; if you wish to deploy manually:
 ```shell
 wget -qO - https://raw.githubusercontent.com/cudoventures/cudo-compute-apps/refs/heads/main/install-compose-service.sh | bash -s dify
 ```
+
+Startups: Rapidly prototype and iterate on AI ideas, accelerating both successes and failures. Numerous teams have used Dify to build MVPs, secure funding, and win customer contracts.
+
+Established Businesses: Enhance existing applications with LLM capabilities. Use Dify's RESTful APIs to separate prompts from business logic, while utilizing our management interface to track data, costs, and usage.
+
+Enterprise AI infrastructure: Banks and tech companies are deploying Dify as an internal LLM gateway, facilitating GenAI adoption with centralized governance.
+
+AI Enthusiasts and Learners: Practice prompt engineering and explore agent technologies with ease. Over 60,000 developers built their first AI app on Dify even before GPTs were introduced. Since then, our community has grown significantly, now boasting over 180,000 developers and supporting 59,000+ end users.
+
+
+
+curl http://localhost:11434/api/pull -d '{
+  "model": "llama3.2"
+}'

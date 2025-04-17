@@ -23,6 +23,13 @@ yq eval '.services.ollama = {
       }
     }
   }
+},
+  "curl-service": {
+    "image": "curlimages/curl",
+    "depends_on": ["ollama"],
+    "entrypoint": ["/bin/sh", "-c", "/scripts/poll_and_pull.sh"],
+    "volumes": [".:/scripts"]
+  }
 }' -i docker/docker-compose.yaml
 
 cp docker/.env.example docker/.env

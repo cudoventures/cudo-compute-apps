@@ -94,6 +94,8 @@ case $option in
     chmod +x /usr/bin/yq
     mkdir -p /cudo
     wget -O /cudo/docker.tar ${REPO_URL}/dify/docker.tar
+    wget -O /cudo/poll_and_pull.sh ${REPO_URL}/dify/poll_and_pull.sh
+    chmod +x /cudo/poll_and_pull.sh
     cd /cudo
     tar -xf docker.tar --strip-components=1 -C .
     wget -O /etc/systemd/system/cudo.service ${REPO_URL}/cudo.service
