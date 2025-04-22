@@ -1,7 +1,7 @@
 services:
   ollama:
     image: "ollama/ollama"
-    volumes: [".volumes/ollama:/root/.ollama"]
+    volumes: ["./volumes/ollama:/root/.ollama"]
     ports: ["127.0.0.1:11434:11434"]
     container_name: "ollama"
     deploy:
