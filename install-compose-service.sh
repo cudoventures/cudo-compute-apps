@@ -47,6 +47,16 @@ case $option in
     systemctl enable cudo.service
     systemctl start cudo.service
     ;;
+  llm-vllm)
+    echo "Setting up LLM/VLLM environment..."
+    mkdir -p /cudo
+    wget -O /cudo/compose.yaml ${REPO_URL}/llm-vllm/compose.yaml
+
+    wget -O /etc/systemd/system/cudo.service ${REPO_URL}/cudo.service
+    systemctl daemon-reload
+    systemctl enable cudo.service
+    systemctl start cudo.service
+    ;;
   ollama)
     echo "Setting up Ollama environment..."
     mkdir -p /cudo

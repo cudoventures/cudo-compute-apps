@@ -1,0 +1,24 @@
+services:
+  vllm:
+    image: vllm/vllm-openai:latest
+    restart: always
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    volumes:
+      - /cudo/huggingface:/root/.cache/huggingface
+    environment:
+      - HUGGING_FACE_HUB_TOKEN
+      - VLLM_API_KEY
+      - MAX_MODEL_LEN
+      - HUGGING_FACE_MODEL
+    ports:
+      - "8000:8000"
+    ipc: host
+    command: --model ${HUGGING_FACE_MODEL} --max-model-len ${MAX_MODEL_LEN}
+
