@@ -1,9 +1,20 @@
 
 
 
+curl http://localhost:11434/api/pull -d '{
+  "model": "llama3.3"
+}'
 
 
 
+small 16gb 24 gb mem
+10gb https://apxml.com/tools/vram-calculator deepseek-r1:32b 
+
+med 24gb 24gb  mem
+10gb https://apxml.com/tools/vram-calculator deepseek-r1:32b 
+
+large 48gb  32gb mem
+lama 3.3 70b-instruct-q4_K_M 43GB llama3.3
 
 Deploying LangGenius Dify with Ollama requires selecting appropriate models for various tasks, considering both performance and GPU memory constraints. Below is an overview of each model type, along with suggested models suitable for GPUs with 24 GB, 48 GB, and 80 GB of VRAM.
 
