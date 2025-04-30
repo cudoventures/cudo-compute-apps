@@ -1,7 +1,7 @@
 #!/bin/sh
 
-if [ -f .env ]; then
-  export $(grep -v '^#' .env | xargs)
+if [ -f .cudo-env ]; then
+  export $(grep -v '^#' .cudo-env | xargs)
 fi
 
 # Wait for the ollama service to be ready
