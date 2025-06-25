@@ -1,0 +1,95 @@
+services:
+  traefik:
+    restart: unless-stopped
+    image: traefik:v2.10
+    command:
+      - "--api.dashboard=true"
+      - "--api.insecure=false"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.letsencrypt.acme.email=sean.berry@cudoventures.com"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+#      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+#      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dashboard.rule=Host(`${TRAEFIK_DASHBOARD_URL}`)"
+      - "traefik.http.routers.dashboard.service=api@internal"
+      - "traefik.http.routers.dashboard.entrypoints=websecure"
+      - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
+      - "traefik.http.middlewares.auth.basicauth.users=${TRAEFIK_HASHED_PASSWORD}"
+      - "traefik.http.routers.dashboard.middlewares=auth"
+    environment:
+      - TRAEFIK_HASHED_PASSWORD
+      - TRAEFIK_DASHBOARD_URL
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - ./traefik/acme.json:/letsencrypt/acme.json
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+  vllm:
+    image: vllm/vllm-openai:v0.8.5
+    restart: unless-stopped
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [ gpu ]
+    volumes:
+      - /cudo/huggingface:/root/.cache/huggingface
+    environment:
+      - VLLM_URL
+      - HUGGING_FACE_HUB_TOKEN
+      - VLLM_API_KEY
+      - VLLM_COMMAND
+      - VLLM_DISABLE_COMPILE_CACHE=1
+    ports:
+      - "127.0.0.1:8000:8000"
+    ipc: host
+    command: $VLLM_COMMAND
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.vllm.rule=Host(`${VLLM_URL}`)"
+      - "traefik.http.routers.vllm.entrypoints=websecure"
+      - "traefik.http.routers.vllm.tls.certresolver=letsencrypt"
+      - "traefik.http.services.vllm.loadbalancer.server.port=8000"
+  prometheus:
+    restart: unless-stopped
+    image: prom/prometheus:latest
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+  grafana:
+    restart: unless-stopped
+    image: grafana/grafana:latest
+    depends_on:
+      - prometheus
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - ./monitoring:/etc/grafana/provisioning/datasources
+      - ./monitoring:/etc/grafana/provisioning/dashboards
+      - ./monitoring:/var/lib/grafana/dashboards
+    environment:
+      - GRAFANA_URL
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.grafana.rule=Host(`${GRAFANA_URL}`)"
+      - "traefik.http.routers.grafana.entrypoints=websecure"
+      - "traefik.http.routers.grafana.tls.certresolver=letsencrypt"
+      - "traefik.http.services.grafana.loadbalancer.server.port=3000"
+
+

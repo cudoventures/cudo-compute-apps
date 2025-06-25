@@ -17,8 +17,9 @@ services:
       - VLLM_API_KEY
       - MAX_MODEL_LEN
       - HUGGING_FACE_MODEL
+      - TENSOR_PARALLEL_SIZE
     ports:
       - "8000:8000"
     ipc: host
-    command: --model ${HUGGING_FACE_MODEL} --max-model-len ${MAX_MODEL_LEN}
+    command: --model ${HUGGING_FACE_MODEL} --max-model-len ${MAX_MODEL_LEN} --tensor-parallel-size ${TENSOR_PARALLEL_SIZE}
 
