@@ -1,7 +1,19 @@
 services:
+  wait-for-dns:
+    image: alpine:latest
+    volumes:
+      - ./scripts:/scripts
+    environment:
+      - TRAEFIK_DASHBOARD_URL
+      - VLLM_URL
+      - GRAFANA_URL
+    command: [ "/bin/sh", "-c", "/scripts/wait_for_dns.sh" ]
+    restart: "no"
   traefik:
+    depends_on:
+      - wait-for-dns
     restart: unless-stopped
-    image: traefik:v2.10
+    image: traefik:v3.1
     command:
       - "--api.dashboard=true"
       - "--api.insecure=false"
@@ -30,7 +42,8 @@ services:
       - "443:443"
       - "80:80"
     volumes:
-      - ./traefik/acme.json:/letsencrypt/acme.json
+#      - ./traefik/acme.json:/letsencrypt/acme.json
+      - ./letsencrypt:/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock:ro
   vllm:
     image: vllm/vllm-openai:v0.8.5
