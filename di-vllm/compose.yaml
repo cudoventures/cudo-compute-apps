@@ -3,10 +3,6 @@ services:
     image: alpine:latest
     volumes:
       - ./scripts:/scripts
-    environment:
-      - TRAEFIK_DASHBOARD_URL
-      - VLLM_URL
-      - GRAFANA_URL
     command: [ "/bin/sh", "-c", "/scripts/wait_for_dns.sh" ]
     restart: "no"
   traefik:

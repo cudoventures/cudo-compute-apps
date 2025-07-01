@@ -2,6 +2,8 @@
 
 VM_IP=$(hostname -I | awk '{print $1}')
 
+source .env
+
 DOMAINS=(
     "$TRAEFIK_DASHBOARD_URL"
     "$VLLM_URL"
