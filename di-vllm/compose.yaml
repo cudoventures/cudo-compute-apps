@@ -2,9 +2,7 @@ services:
   wait-for-dns:
     image: debian:bullseye-slim
     environment:
-      - TRAEFIK_DASHBOARD_URL
-      - VLLM_URL
-      - GRAFANA_URL
+      - URL
       - HOST_IP
     volumes:
       - ./scripts:/scripts
@@ -30,7 +28,7 @@ services:
 #      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.dashboard.rule=Host(`${TRAEFIK_DASHBOARD_URL}`)"
+      - "traefik.http.routers.dashboard.rule=Host(`${URL}`)"
       - "traefik.http.routers.dashboard.service=api@internal"
       - "traefik.http.routers.dashboard.entrypoints=websecure"
       - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
@@ -38,7 +36,7 @@ services:
       - "traefik.http.routers.dashboard.middlewares=auth"
     environment:
       - TRAEFIK_HASHED_PASSWORD
-      - TRAEFIK_DASHBOARD_URL
+      - URL
     ports:
       - "443:443"
       - "80:80"
@@ -71,7 +69,7 @@ services:
     command: $VLLM_COMMAND
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.vllm.rule=Host(`${VLLM_URL}`)"
+      - "traefik.http.routers.vllm.rule=PathPrefix(`/vllm`)"
       - "traefik.http.routers.vllm.entrypoints=websecure"
       - "traefik.http.routers.vllm.tls.certresolver=letsencrypt"
       - "traefik.http.services.vllm.loadbalancer.server.port=8000"
@@ -101,7 +99,7 @@ services:
       - GRAFANA_URL
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.grafana.rule=Host(`${GRAFANA_URL}`)"
+      - "traefik.http.routers.grafana.rule=PathPrefix(`/grafana`)"
       - "traefik.http.routers.grafana.entrypoints=websecure"
       - "traefik.http.routers.grafana.tls.certresolver=letsencrypt"
       - "traefik.http.services.grafana.loadbalancer.server.port=3000"

@@ -3,9 +3,7 @@
 
 
 DOMAINS=(
-    "$TRAEFIK_DASHBOARD_URL"
-    "$VLLM_URL"
-    "$GRAFANA_URL"
+    "$URL"
 )
 
 for DOMAIN in "${DOMAINS[@]}"; do
