@@ -14,7 +14,7 @@ services:
     restart: unless-stopped
     image: traefik:v3.1
     command:
-      - "--api.dashboard=true"
+      - "--api.dashboard=false"
       - "--api.insecure=false"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
@@ -28,12 +28,14 @@ services:
 #      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.dashboard.rule=Host(`${URL}`)"
+      - "traefik.http.routers.dashboard.rule=Host(`${URL}`) && PathPrefix(`/dashboard`)"
       - "traefik.http.routers.dashboard.service=api@internal"
       - "traefik.http.routers.dashboard.entrypoints=websecure"
       - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
       - "traefik.http.middlewares.auth.basicauth.users=${TRAEFIK_HASHED_PASSWORD}"
       - "traefik.http.routers.dashboard.middlewares=auth"
+      - "traefik.http.middlewares.dashboard-stripprefix.stripprefix.prefixes=/dashboard"
+      - "traefik.http.routers.dashboard.middlewares=dashboard-stripprefix"
     environment:
       - TRAEFIK_HASHED_PASSWORD
       - URL
@@ -58,7 +60,7 @@ services:
     volumes:
       - /cudo/huggingface:/root/.cache/huggingface
     environment:
-      - VLLM_URL
+      - URL
       - HUGGING_FACE_HUB_TOKEN
       - VLLM_API_KEY
       - VLLM_COMMAND
@@ -69,10 +71,12 @@ services:
     command: $VLLM_COMMAND
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.vllm.rule=PathPrefix(`/vllm`)"
+      - "traefik.http.routers.vllm.rule=Host(`${URL}`)"
       - "traefik.http.routers.vllm.entrypoints=websecure"
       - "traefik.http.routers.vllm.tls.certresolver=letsencrypt"
       - "traefik.http.services.vllm.loadbalancer.server.port=8000"
+#      - "traefik.http.middlewares.vllm-stripprefix.stripprefix.prefixes=/vllm"
+#      - "traefik.http.routers.vllm.middlewares=vllm-stripprefix"
   prometheus:
     restart: unless-stopped
     image: prom/prometheus:latest
@@ -96,12 +100,17 @@ services:
       - ./monitoring:/etc/grafana/provisioning/dashboards
       - ./monitoring:/var/lib/grafana/dashboards
     environment:
-      - GRAFANA_URL
+      - URL
+      - GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s/grafana
+      - GF_SERVER_SERVE_FROM_SUB_PATH=true
+      - GF_SECURITY_ADMIN_PASSWORD=$VLLM_API_KEY
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.grafana.rule=PathPrefix(`/grafana`)"
+      - "traefik.http.routers.grafana.rule=Host(`${URL}`) && PathPrefix(`/grafana`)"
       - "traefik.http.routers.grafana.entrypoints=websecure"
       - "traefik.http.routers.grafana.tls.certresolver=letsencrypt"
       - "traefik.http.services.grafana.loadbalancer.server.port=3000"
+#      - "traefik.http.middlewares.grafana-stripprefix.stripprefix.prefixes=/grafana"
+#      - "traefik.http.routers.grafana.middlewares=grafana-stripprefix"
 
 
