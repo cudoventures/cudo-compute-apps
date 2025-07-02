@@ -15,5 +15,6 @@ echo "di-vllm/" >> .git/info/sparse-checkout
 git pull origin main
 cp .env /cudo/di-vllm/
 cd di-vllm
+echo "HOST_IP=$(hostname -I | awk '{print $1}')" >> .env
 docker compose up -d
 

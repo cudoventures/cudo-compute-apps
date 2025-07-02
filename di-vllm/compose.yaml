@@ -1,9 +1,14 @@
 services:
   wait-for-dns:
-    image: alpine:latest
+    image: debian:bullseye-slim
+    environment:
+      - TRAEFIK_DASHBOARD_URL
+      - VLLM_URL
+      - GRAFANA_URL
+      - HOST_IP
     volumes:
       - ./scripts:/scripts
-    command: [ "/bin/sh", "-c", "/scripts/wait_for_dns.sh" ]
+    command: [ "/bin/bash", "-c", "/scripts/wait_for_dns.sh" ]
     restart: "no"
   traefik:
     depends_on:

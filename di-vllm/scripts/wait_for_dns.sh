@@ -1,8 +1,6 @@
 #!/bin/bash
 
-VM_IP=$(hostname -I | awk '{print $1}')
 
-source .env
 
 DOMAINS=(
     "$TRAEFIK_DASHBOARD_URL"
@@ -12,9 +10,9 @@ DOMAINS=(
 
 for DOMAIN in "${DOMAINS[@]}"; do
     while true; do
-        IP=$(dig +short $DOMAIN)
+        IP=$(getent ahosts $DOMAIN | awk '{print $1; exit}')
         if [ -n "$IP" ]; then
-            if [ "$IP" == "$VM_IP" ]; then
+            if [ "$IP" == "$HOST_IP" ]; then
                 echo "Domain $DOMAIN resolved to correct IP: $IP"
                 break
             else
