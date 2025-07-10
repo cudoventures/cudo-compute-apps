@@ -88,11 +88,26 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
+  loki:
+    image: grafana/loki:latest
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - ./loki:/etc/loki
+  promtail:
+    image: grafana/promtail:latest
+    volumes:
+      - /var/log:/var/log
+      - /var/lib/docker/containers:/var/lib/docker/containers
+      - ./promtail:/etc/promtail
+    command: -config.file=/etc/promtail/config.yml
   grafana:
     restart: unless-stopped
     image: grafana/grafana:latest
     depends_on:
       - prometheus
+      - loki
     ports:
       - "127.0.0.1:3000:3000"
     volumes:
